@@ -17,7 +17,7 @@ export function HomeSkeleton() {
   return (
     <div className="min-h-0 flex-1 overflow-y-auto">
       <div className="flex items-center gap-3.5">
-        <Skeleton className="size-12 rounded-full" />
+        <Skeleton className="size-14 rounded-full" />
         <div className="space-y-2">
           <Skeleton className="h-5 w-36" />
           <Skeleton className="h-4 w-24" />
