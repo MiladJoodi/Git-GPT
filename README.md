@@ -1,67 +1,47 @@
-# GitHub Follow Manager
+# Git-GPT
 
-A production-ready utility that connects to your GitHub account, shows who you follow that does not follow you back, and lets you unfollow those accounts safely.
+Git-GPT is a simple tool for managing your GitHub following list.
 
-This is a real GitHub integration. There is no mock login and no fake follower data.
+It compares your **Followers** and **Following** lists to find people you follow who don't follow you back. You can review the results, select multiple users, and unfollow them directly from the app.
 
-## Local development
+## Features
 
-### 1. Install
+* 🔍 Compare Followers and Following
+* 👤 Find users who don't follow you back
+* ☑️ Select multiple users
+* 🚀 Unfollow multiple users at once
+* 🔐 GitHub OAuth authentication
+* 🛡️ No GitHub password required
+* 📦 No repository access required
 
-```bash
-npm install
-```
+## How It Works
 
-### 2. Create a GitHub OAuth App
+1. Sign in with your GitHub account.
+2. Git-GPT fetches your Followers and Following lists.
+3. The app compares both lists.
+4. Users who don't follow you back are displayed.
+5. Select the users you want to remove.
+6. Unfollow them directly through GitHub.
 
-1. Open [GitHub Developer Settings](https://github.com/settings/developers)
-2. Choose **OAuth Apps** → **New OAuth App**
-3. Use:
+The app uses GitHub's official REST API for follower/following data and follow management.
 
-| Field | Local value |
-| --- | --- |
-| Application name | GitHub Follow Manager |
-| Homepage URL | `http://localhost:3000` |
-| Authorization callback URL | `http://localhost:3000/api/auth/github/callback` |
+## Tech Stack
 
-4. Copy the **Client ID** and generate a **Client Secret**
+* Next.js
+* React
+* TypeScript
+* Tailwind CSS
+* GitHub REST API
+* GitHub OAuth
 
-Requested scopes at authorize time: `read:user`, `user:follow`, `offline_access`.
+## Security
 
-### 3. Environment variables
+Git-GPT uses GitHub OAuth instead of asking for your GitHub password. It doesn't require access to your repositories.
 
-Copy `.env.example` to `.env.local` and fill in:
+The application only requests the permissions needed for follow management. GitHub's `user:follow` scope allows an OAuth app to follow or unfollow users.
 
-```text
-GITHUB_CLIENT_ID=your_client_id
-GITHUB_CLIENT_SECRET=your_client_secret
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-SESSION_SECRET=generate_a_long_random_string
-```
+## Open Source
 
-Generate a session secret:
+Git-GPT is open source. Contributions, feedback, and improvements are welcome.
 
-```bash
-openssl rand -base64 48
-```
-
-`SESSION_SECRET` must be at least 32 characters.
-
-### 4. Run
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) and choose **Continue with GitHub**.
-
-## Scripts
-
-```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-npm run typecheck
-npm test
-```
+If you find it useful, consider giving the repository a ⭐.
