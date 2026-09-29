@@ -204,3 +204,69 @@ export const forkActionLog = pgTable(
     ),
   ],
 );
+
+export const followerSnapshot = pgTable(
+  "follower_snapshot",
+  {
+    id: serial("id").primaryKey(),
+    ownerGithubUserId: bigint("owner_github_user_id", {
+      mode: "number",
+    }).notNull(),
+    followerGithubUserId: bigint("follower_github_user_id", {
+      mode: "number",
+    }).notNull(),
+    login: varchar("login", { length: 39 }).notNull(),
+    avatarUrl: text("avatar_url"),
+    firstSeenAt: timestamp("first_seen_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    unique("follower_snapshot_owner_follower_uidx").on(
+      table.ownerGithubUserId,
+      table.followerGithubUserId,
+    ),
+    index("follower_snapshot_owner_idx").on(table.ownerGithubUserId),
+  ],
+);
+
+export const followerEventKinds = ["gained", "lost"] as const;
+export type FollowerEventKind = (typeof followerEventKinds)[number];
+
+export const followerEvent = pgTable(
+  "follower_event",
+  {
+    id: serial("id").primaryKey(),
+    ownerGithubUserId: bigint("owner_github_user_id", {
+      mode: "number",
+    }).notNull(),
+    followerGithubUserId: bigint("follower_github_user_id", {
+      mode: "number",
+    }).notNull(),
+    login: varchar("login", { length: 39 }).notNull(),
+    avatarUrl: text("avatar_url"),
+    kind: varchar("kind", { length: 8 }).notNull(),
+    occurredAt: timestamp("occurred_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("follower_event_owner_occurred_idx").on(
+      table.ownerGithubUserId,
+      table.occurredAt,
+    ),
+  ],
+);
+
+export const followerWatchState = pgTable("follower_watch_state", {
+  ownerGithubUserId: bigint("owner_github_user_id", {
+    mode: "number",
+  }).primaryKey(),
+  lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }),
+  baselineCompletedAt: timestamp("baseline_completed_at", {
+    withTimezone: true,
+  }),
+});

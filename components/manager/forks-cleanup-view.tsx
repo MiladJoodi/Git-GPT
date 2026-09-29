@@ -118,6 +118,15 @@ export function ForksCleanupView() {
   const allSelected =
     selectableIds.length > 0 && selectableIds.every((id) => selected.has(id));
   const uncheckedCount = all.filter((f) => !checks[f.fullName]).length;
+  const selectedForks = [...selected]
+    .map((name) => all.find((f) => f.fullName === name))
+    .filter((f): f is ForkRepo => f !== undefined);
+  const archivableSelected = selectedForks
+    .filter((f) => !f.archived)
+    .map((f) => f.fullName);
+  const unarchivableSelected = selectedForks
+    .filter((f) => f.archived)
+    .map((f) => f.fullName);
 
   function toggle(fullName: string, value: boolean) {
     setSelected((current) => {
@@ -502,24 +511,37 @@ export function ForksCleanupView() {
               </button>
             </div>
             <div className="flex flex-wrap justify-end gap-2">
-              <Button
-                variant="outline"
-                className="rounded-sm"
-                onClick={() =>
-                  setConfirm({ kind: "archive", targets: [...selected] })
-                }
-              >
-                {t("cleanupArchiveSelected")}
-              </Button>
-              <Button
-                variant="outline"
-                className="rounded-sm"
-                onClick={() =>
-                  setConfirm({ kind: "unarchive", targets: [...selected] })
-                }
-              >
-                {t("cleanupUnarchiveSelected")}
-              </Button>
+              {archivableSelected.length > 0 ? (
+                <Button
+                  variant="outline"
+                  className="rounded-sm"
+                  onClick={() =>
+                    setConfirm({ kind: "archive", targets: archivableSelected })
+                  }
+                >
+                  {t("cleanupArchiveSelected")}
+                  {archivableSelected.length < selected.size
+                    ? ` (${formatCount(archivableSelected.length)})`
+                    : ""}
+                </Button>
+              ) : null}
+              {unarchivableSelected.length > 0 ? (
+                <Button
+                  variant="outline"
+                  className="rounded-sm"
+                  onClick={() =>
+                    setConfirm({
+                      kind: "unarchive",
+                      targets: unarchivableSelected,
+                    })
+                  }
+                >
+                  {t("cleanupUnarchiveSelected")}
+                  {unarchivableSelected.length < selected.size
+                    ? ` (${formatCount(unarchivableSelected.length)})`
+                    : ""}
+                </Button>
+              ) : null}
               <Button
                 variant="destructive"
                 className="rounded-sm"
