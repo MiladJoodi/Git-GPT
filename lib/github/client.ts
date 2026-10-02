@@ -131,6 +131,26 @@ export function parseLinkHeader(header: string | null): {
   return links;
 }
 
+export async function githubPaginateWithQuery<T>(
+  pathWithQuery: string,
+  accessToken: string,
+  perPage = 100,
+  headers?: HeadersInit,
+): Promise<T[]> {
+  const separator = pathWithQuery.includes("?") ? "&" : "?";
+  let next: string | undefined = `${pathWithQuery}${separator}per_page=${perPage}&page=1`;
+  const out: T[] = [];
+
+  while (next) {
+    const response = await githubRequest(next, accessToken, { headers });
+    const page = (await response.json()) as T[];
+    out.push(...page);
+    next = parseLinkHeader(response.headers.get("link")).next;
+  }
+
+  return out;
+}
+
 export async function githubPaginate<T>(
   path: string,
   accessToken: string,

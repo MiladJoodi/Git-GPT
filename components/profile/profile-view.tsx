@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LogOut, Moon, RefreshCw, Shield, Sparkles, Sun } from "lucide-react";
+import { CalendarDays, GitBranch, History, LogOut, Moon, RefreshCw, Shield, Sparkles, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -146,6 +146,27 @@ export function ProfileView() {
         >
           {t("profileCleanup")}
           <Sparkles className="size-4" />
+        </Link>
+        <Link
+          href="/followers/history"
+          className="flex w-full cursor-pointer items-center justify-between py-3.5 text-sm hover:opacity-70"
+        >
+          {t("profileFollowerHistory")}
+          <History className="size-4" />
+        </Link>
+        <Link
+          href="/insights/contributions"
+          className="flex w-full cursor-pointer items-center justify-between py-3.5 text-sm hover:opacity-70"
+        >
+          {t("profileContributions")}
+          <CalendarDays className="size-4" />
+        </Link>
+        <Link
+          href="/branches"
+          className="flex w-full cursor-pointer items-center justify-between py-3.5 text-sm hover:opacity-70"
+        >
+          {t("profileBranches")}
+          <GitBranch className="size-4" />
         </Link>
         <button
           type="button"
