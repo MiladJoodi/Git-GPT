@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { useGithubData } from "@/components/app/github-data-provider";
 import { ErrorState } from "@/components/feedback/error-state";
 import { ProfilePageSkeleton } from "@/components/feedback/skeletons";
+import { AccountsSwitcher } from "@/components/profile/accounts-switcher";
+import { AccentPicker } from "@/components/profile/accent-picker";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatCount, relativeTimeValue } from "@/lib/format";
 import { useI18n } from "@/components/i18n/i18n-provider";
@@ -74,6 +76,9 @@ export function ProfileView() {
           {data.profile.bio}
         </p>
       ) : null}
+
+      <AccountsSwitcher />
+      <AccentPicker />
 
       <dl className="mt-6 flex gap-6 text-sm">
         <Metric label={t("profileFollowers")} value={data.counts.followers} />

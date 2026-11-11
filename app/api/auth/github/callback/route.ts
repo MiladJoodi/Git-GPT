@@ -6,6 +6,7 @@ import {
   getOAuthPending,
   setSession,
 } from "@/lib/auth/session";
+import { saveCurrentAccount } from "@/lib/auth/accounts";
 import { validateOAuthState } from "@/lib/auth/oauth-state";
 import { exchangeAuthorizationCode, tokensFromResponse } from "@/lib/auth/oauth";
 import { getAuthenticatedUser } from "@/lib/github/user";
@@ -72,6 +73,7 @@ export async function GET(request: Request) {
       accessTokenExpiresAt: tokens.accessTokenExpiresAt,
       refreshTokenExpiresAt: tokens.refreshTokenExpiresAt,
     });
+    await saveCurrentAccount();
     await clearOAuthPending();
 
     return NextResponse.redirect(new URL("/", getAppUrl()));

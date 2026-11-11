@@ -15,6 +15,14 @@ import { API_ERROR_KEYS } from "@/lib/i18n/core";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useGithubData } from "@/components/app/github-data-provider";
 import { unfollowMany, useFollowActions } from "@/components/app/use-unfollow";
+import {
+  ListControls,
+  sortUsers,
+  type DisplayMode,
+  type SortDirection,
+  type SortKey,
+  type SortOption,
+} from "@/components/users/list-controls";
 import { SearchField } from "@/components/users/search-field";
 import { UserList } from "@/components/users/user-list";
 import { SelectionBar } from "@/components/users/selection-bar";
@@ -56,6 +64,9 @@ export function ManageableUserList({
   const { unfollowOne, followOne, pending } = useFollowActions();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query);
+  const [sortKey, setSortKey] = useState<SortKey>("default");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [displayMode, setDisplayMode] = useState<DisplayMode>("list");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTargets, setConfirmTargets] = useState<string[]>([]);
@@ -73,10 +84,16 @@ export function ManageableUserList({
   const runIdRef = useRef(0);
   const [runId, setRunId] = useState(0);
 
-  const filtered = useMemo(
-    () => users.filter((user) => matchesSearch(user, debouncedQuery)),
-    [users, debouncedQuery],
-  );
+  const filtered = useMemo(() => {
+    const matched = users.filter((user) => matchesSearch(user, debouncedQuery));
+    return sortUsers(matched, sortKey, sortDirection);
+  }, [users, debouncedQuery, sortKey, sortDirection]);
+
+  const sortOptions: SortOption[] = [
+    { value: "default", label: t("sortDefault") },
+    { value: "username", label: t("sortUsername") },
+    { value: "status", label: t("sortStatus") },
+  ];
 
   function toggle(login: string, value: boolean) {
     setSelected((current) => {
@@ -179,6 +196,15 @@ export function ManageableUserList({
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="shrink-0 space-y-3 pb-3">
         <SearchField value={query} onChange={setQuery} />
+        <ListControls
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onSortKeyChange={setSortKey}
+          onSortDirectionChange={setSortDirection}
+          displayMode={displayMode}
+          onDisplayModeChange={setDisplayMode}
+          sortOptions={sortOptions}
+        />
         {filtered.length > 0 && selectable ? (
           <div className="flex items-center justify-between text-sm">
             <button
@@ -243,6 +269,7 @@ export function ManageableUserList({
           showFollowAction={showFollowAction}
           showExploreAction={showExploreAction}
           showStarsAction={showStarsAction}
+          displayMode={displayMode}
           selected={selected}
           onToggle={toggle}
           onUnfollow={(login) => void unfollowOne(login)}

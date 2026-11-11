@@ -18,6 +18,7 @@ type UserListProps = {
   showFollowAction?: boolean;
   showExploreAction?: boolean;
   showStarsAction?: boolean;
+  displayMode?: "list" | "grid";
 };
 
 export function UserList({
@@ -33,6 +34,7 @@ export function UserList({
   showFollowAction = false,
   showExploreAction = false,
   showStarsAction = false,
+  displayMode = "list",
 }: UserListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line react-hooks/incompatible-library -- virtualizer is required for large GitHub graphs
@@ -43,6 +45,37 @@ export function UserList({
     overscan: 16,
     getItemKey: (index) => users[index]?.id ?? index,
   });
+
+  if (displayMode === "grid") {
+    return (
+      <div ref={parentRef} className="min-h-0 flex-1 overflow-y-auto">
+        <ul
+          className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"
+          style={{ paddingBottom: selected && selected.size > 0 ? 96 : 8 }}
+        >
+          {users.map((user) => (
+            <li key={user.id}>
+              <UserRow
+                user={user}
+                selectable={selectable}
+                showFollowAction={showFollowAction}
+                showExploreAction={showExploreAction}
+                showStarsAction={showStarsAction}
+                selected={selected?.has(user.login)}
+                onSelectedChange={(value) => onToggle?.(user.login, value)}
+                onUnfollow={() => onUnfollow?.(user.login)}
+                onFollow={() => onFollow?.(user)}
+                onExplore={() => onExplore?.(user.login)}
+                onStars={() => onStars?.(user.login)}
+                pending={pendingUsername === user.login}
+                compact
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <div ref={parentRef} className="min-h-0 flex-1 overflow-y-auto">

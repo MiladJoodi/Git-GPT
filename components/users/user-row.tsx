@@ -22,6 +22,7 @@ type UserRowProps = {
   showFollowAction?: boolean;
   showExploreAction?: boolean;
   showStarsAction?: boolean;
+  compact?: boolean;
 };
 
 export function UserRow({
@@ -37,6 +38,7 @@ export function UserRow({
   showFollowAction = false,
   showExploreAction = false,
   showStarsAction = false,
+  compact = false,
 }: UserRowProps) {
   const { t } = useI18n();
   const initials = (user.name ?? user.login).slice(0, 1).toUpperCase();
@@ -44,6 +46,90 @@ export function UserRow({
   const canUnfollow = showFollowAction
     ? user.status === "mutual" || user.status === "not_following_back"
     : selectable || Boolean(onUnfollow);
+
+  if (compact) {
+    return (
+      <article
+        className={cn(
+          "flex h-full flex-col items-center gap-2 rounded-md border border-border p-3 text-center",
+          selected && "bg-muted/50",
+        )}
+      >
+        {selectable ? (
+          <Checkbox
+            checked={selected}
+            onCheckedChange={(value) => onSelectedChange?.(Boolean(value))}
+            aria-label={`${t("selectAll")} @${user.login}`}
+          />
+        ) : null}
+        <a
+          href={user.htmlUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="flex w-full flex-col items-center gap-1.5"
+          aria-label={t("openOnGithub", { login: user.login })}
+        >
+          <Avatar className="size-12">
+            <AvatarImage src={user.avatarUrl} alt="" />
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
+          <span className="w-full min-w-0">
+            <span className="block truncate text-sm font-medium leading-tight">
+              {user.name ?? user.login}
+            </span>
+            <span className="block truncate text-[12px] text-muted-foreground">
+              @{user.login}
+            </span>
+          </span>
+        </a>
+        <RelationshipBadge status={user.status} />
+        <div className="flex w-full flex-wrap items-center justify-center gap-1">
+          {showExploreAction ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-7 rounded-sm px-2"
+              aria-label={`${t("exploreUser")} @${user.login}`}
+              onClick={onExplore}
+            >
+              <Compass className="size-3.5" aria-hidden="true" />
+            </Button>
+          ) : null}
+          {showStarsAction ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-7 rounded-sm px-2"
+              aria-label={`${t("starsUser")} @${user.login}`}
+              onClick={onStars}
+            >
+              <Star className="size-3.5" aria-hidden="true" />
+            </Button>
+          ) : null}
+          {canFollow ? (
+            <FollowActionButton
+              label={t("follow")}
+              pending={pending}
+              variant="default"
+              ariaLabel={`${t("follow")} @${user.login}`}
+              onClick={onFollow}
+            />
+          ) : null}
+          {canUnfollow && !canFollow ? (
+            <FollowActionButton
+              label={t("unfollow")}
+              pending={pending}
+              variant="outline"
+              ariaLabel={`${t("unfollow")} @${user.login}`}
+              onClick={onUnfollow}
+            />
+          ) : null}
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article

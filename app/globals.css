@@ -120,6 +120,58 @@
   --sidebar-ring: #eceae4;
 }
 
+[data-accent="forest"] {
+  --primary: #1f5c3d;
+  --primary-foreground: #f3f2ef;
+  --ring: #1f5c3d;
+  --mark: #2e7d51;
+}
+[data-accent="forest"].dark {
+  --primary: #6fd39c;
+  --primary-foreground: #0d1a12;
+  --ring: #6fd39c;
+  --mark: #4fae7d;
+}
+
+[data-accent="ocean"] {
+  --primary: #17547d;
+  --primary-foreground: #f3f2ef;
+  --ring: #17547d;
+  --mark: #2b74a8;
+}
+[data-accent="ocean"].dark {
+  --primary: #74b6ea;
+  --primary-foreground: #0b1620;
+  --ring: #74b6ea;
+  --mark: #4f96d1;
+}
+
+[data-accent="rose"] {
+  --primary: #8f2d4d;
+  --primary-foreground: #f9f4f6;
+  --ring: #8f2d4d;
+  --mark: #b04468;
+}
+[data-accent="rose"].dark {
+  --primary: #ef9db8;
+  --primary-foreground: #1f0d13;
+  --ring: #ef9db8;
+  --mark: #d9708f;
+}
+
+[data-accent="amber"] {
+  --primary: #8a5a09;
+  --primary-foreground: #faf6ee;
+  --ring: #8a5a09;
+  --mark: #b07914;
+}
+[data-accent="amber"].dark {
+  --primary: #eec06a;
+  --primary-foreground: #1c1405;
+  --ring: #eec06a;
+  --mark: #d19f42;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

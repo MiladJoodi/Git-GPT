@@ -9,6 +9,7 @@ import {
   Compass,
   LoaderCircle,
   Star,
+  UserPlus,
   WandSparkles,
 } from "lucide-react";
 import {
@@ -114,6 +115,13 @@ function HomeReady({
       title: t("homeToolCrawler"),
       hint: t("homeToolCrawlerHint"),
       vip: true,
+    },
+    {
+      href: "/auto-follow-back",
+      icon: UserPlus,
+      title: t("autoFollowBack"),
+      hint: t("autoFollowBackHint"),
+      vip: false,
     },
     {
       href: "/activity",
