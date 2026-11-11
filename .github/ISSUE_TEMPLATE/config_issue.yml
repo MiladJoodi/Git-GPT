@@ -1,0 +1,39 @@
+name: Config / OAuth problem
+description: Sign-in fails, OAuth errors, session issues
+labels: [config]
+body:
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: What happens?
+      description: Which step fails — sign-in redirect, callback, session expiry, account switch?
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Error message
+      description: The exact error text or the ?error= value shown on /login.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Hosting (local dev / Vercel / Railway / VPS) and browser.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are set in .env.local
+        - label: The OAuth app callback URL matches my deployed origin
+        - label: SESSION_SECRET is set
+        - label: (Crawler) DATABASE_URL is reachable
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Never paste real secrets.

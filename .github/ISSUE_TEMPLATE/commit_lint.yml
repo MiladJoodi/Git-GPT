@@ -1,0 +1,19 @@
+name: Conventional Commit
+description: Check the commit message follows Conventional Commits
+title: "lint: commit message"
+body:
+  - type: input
+    id: commit
+    attributes:
+      label: Commit subject
+      placeholder: "feat(users): add grid view to people lists"
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Rules
+      options:
+        - label: type is one of feat / fix / chore / docs / refactor / test
+        - label: scope names the touched area (users, auth, cleanup, crawler, i18n, ...)
+        - label: subject is imperative, lowercase, no trailing period
