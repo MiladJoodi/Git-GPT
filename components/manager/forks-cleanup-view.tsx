@@ -20,6 +20,7 @@ import {
   archiveForkOnce,
   checkForkOnce,
   deleteForkOnce,
+  syncForkOnce,
   runForkActionMany,
   unarchiveForkOnce,
 } from "@/components/app/use-fork-cleanup";
@@ -169,6 +170,26 @@ export function ForksCleanupView() {
       }
     }
     setCheckingAll(false);
+  }
+
+  async function syncOne(fullName: string) {
+    if (progressOpen || rowPending) return;
+    setRowPending(fullName);
+    try {
+      const mergeType = await syncForkOnce(fullName);
+      toast.success(
+        mergeType === "none"
+          ? t("toastCleanupUpToDate", { fullName })
+          : t("toastCleanupSynced", { fullName }),
+      );
+    } catch (err) {
+      const code = errCode(err);
+      if (!handleAuthError(code)) {
+        toast.error(t(API_ERROR_KEYS[code] ?? "errorFailed"));
+      }
+    } finally {
+      setRowPending(null);
+    }
   }
 
   async function actOne(fullName: string, kind: BulkKind) {
@@ -418,6 +439,20 @@ export function ForksCleanupView() {
                             ) : null}
                             {t("cleanupCheck")}
                           </Button>
+                          {status === "clean" && !fork.archived ? (
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              className="rounded-sm"
+                              disabled={
+                                progressOpen || rowPending === fork.fullName
+                              }
+                              onClick={() => void syncOne(fork.fullName)}
+                            >
+                              {t("cleanupSync")}
+                            </Button>
+                          ) : null}
                           {fork.archived ? (
                             <Button
                               type="button"

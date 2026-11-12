@@ -114,3 +114,59 @@ export async function deleteRepo(
     method: "DELETE",
   });
 }
+
+export type ForkSyncResult = {
+  mergeType: "fast-forward" | "merge" | "none";
+  message: string;
+};
+
+export class ForkSyncError extends Error {
+  readonly reason: "no_parent" | "diverged" | "conflict";
+  constructor(reason: "no_parent" | "diverged" | "conflict") {
+    super(reason);
+    this.name = "ForkSyncError";
+    this.reason = reason;
+  }
+}
+
+export async function syncFork(
+  accessToken: string,
+  owner: string,
+  repo: string,
+): Promise<ForkSyncResult> {
+  const details = await getRepoDetails(accessToken, owner, repo);
+  if (!details.parent) {
+    throw new ForkSyncError("no_parent");
+  }
+
+  const check = await checkFork(accessToken, owner, repo);
+  if (check.aheadBy === null || check.aheadBy > 0) {
+    throw new ForkSyncError("diverged");
+  }
+
+  try {
+    const response = await githubRequest(
+      `/repos/${enc(owner)}/${enc(repo)}/merge-upstream`,
+      accessToken,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ branch: details.default_branch }),
+      },
+    );
+    const body = (await response.json()) as {
+      merge_type?: string;
+      message?: string;
+    };
+    const mergeType =
+      body.merge_type === "fast-forward" || body.merge_type === "merge"
+        ? body.merge_type
+        : "none";
+    return { mergeType, message: body.message ?? "" };
+  } catch (error) {
+    if (error instanceof GitHubApiError && error.status === 409) {
+      throw new ForkSyncError("conflict");
+    }
+    throw error;
+  }
+}

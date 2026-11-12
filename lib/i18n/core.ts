@@ -38,4 +38,7 @@ export const API_ERROR_KEYS: Record<string, MessageKey> = {
   network: "errorNetwork",
   forbidden: "errorForbidden",
   failed: "errorFailed",
+  sync_no_parent: "errorSyncNoParent",
+  sync_diverged: "errorSyncDiverged",
+  sync_conflict: "errorSyncConflict",
 };

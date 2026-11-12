@@ -521,6 +521,14 @@ export const en = {
   toastCleanupUnarchived: "Unarchived {fullName}",
   toastCleanupDeleted: "Deleted {fullName}",
   toastCleanupChecked: "Checked {fullName}",
+  cleanupSync: "Sync",
+  toastCleanupSynced: "Synced {fullName} with upstream",
+  toastCleanupUpToDate: "{fullName} is already up to date",
+  errorSyncNoParent: "This repository no longer has an upstream to sync from.",
+  errorSyncDiverged:
+    "This fork has commits upstream doesn't have, or couldn't be compared. Syncing is only offered for forks that are not ahead of upstream.",
+  errorSyncConflict:
+    "Syncing hit a conflict. Resolve it on GitHub, then try again.",
 
   profileFollowerHistory: "Follower history",
   followerHistoryTitle: "Follower history",
@@ -543,6 +551,7 @@ export const en = {
   followerOne: "follower",
   followerMany: "followers",
 
+<<<<<<< HEAD
   homeToolActivity: "Activity",
   homeToolActivityHint: "Create dated commits on any repo you own.",
   activityTitle: "Activity",
@@ -592,6 +601,42 @@ export const en = {
   themeOcean: "Ocean",
   themeRose: "Rose",
   themeAmber: "Amber",
+
+  profileContributions: "Contribution insights",
+  contributionsTitle: "Contribution insights",
+  contributionsHint:
+    "Your real GitHub activity over the last year — streaks, weekday patterns, and gaps.",
+  contributionsTotal: "{count} contributions in the last year",
+  contributionsLongestStreak: "Longest streak",
+  contributionsCurrentStreak: "Current streak",
+  contributionsStreakRange: "{start} – {end}",
+  contributionsNoStreak: "No active streak",
+  contributionsWeekdayTitle: "Activity by weekday",
+  contributionsMonthlyTitle: "Monthly trend",
+  contributionsGapsTitle: "Gaps in activity",
+  contributionsGapsHint: "Stretches of 3+ days with no recorded activity",
+  contributionsNoGaps: "No gaps of 3+ days in the last year",
+  contributionsGapRange: "{start} – {end} ({days} {dayWord})",
+  dayOne: "day",
+  dayMany: "days",
+
+  profileBranches: "Branch maintenance",
+  branchesTitle: "Branch maintenance",
+  branchesHint: "Pick a repository to review its branches.",
+  branchesDefaultLabel: "Default branch: {branch}",
+  branchesMerged: "Merged",
+  branchesUnmerged: "Unmerged",
+  branchesProtected: "protected",
+  branchesStatusUnknown: "Could not compare to the default branch",
+  branchesStatusMerged: "No unique commits — safe to delete",
+  branchesStatusUnmerged: "{ahead} ahead, {behind} behind the default branch",
+  branchOne: "branch",
+  branchMany: "branches",
+  confirmDeleteBranchesTitle: "Delete {count} {branches}?",
+  confirmDeleteBranchesBody:
+    "This permanently deletes these branches from GitHub. This cannot be undone.",
+  confirmDeleteBranchesAction: "Delete {count}",
+  toastBranchDeleted: "Deleted {branch}",
 } as const;
 
 export type MessageKey = keyof typeof en;

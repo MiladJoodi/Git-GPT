@@ -56,6 +56,25 @@ export async function deleteForkOnce(fullName: string): Promise<void> {
   await postForkAction(fullName, "delete");
 }
 
+export type ForkSyncMergeType = "fast-forward" | "merge" | "none";
+
+export async function syncForkOnce(fullName: string): Promise<ForkSyncMergeType> {
+  const response = await fetch("/api/cleanup/forks/sync", {
+    method: "POST",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify({ fullName }),
+  });
+  const body = (await response.json()) as {
+    ok?: boolean;
+    mergeType?: ForkSyncMergeType;
+    error?: string;
+  };
+  if (!response.ok) {
+    throwFromError(response.status, body.error);
+  }
+  return body.mergeType ?? "none";
+}
+
 export function runForkActionMany(
   fullNames: string[],
   action: ForkCleanupAction,
