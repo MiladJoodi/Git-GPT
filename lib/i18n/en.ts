@@ -551,7 +551,6 @@ export const en = {
   followerOne: "follower",
   followerMany: "followers",
 
-<<<<<<< HEAD
   homeToolActivity: "Activity",
   homeToolActivityHint: "Create dated commits on any repo you own.",
   activityTitle: "Activity",
@@ -636,6 +635,8 @@ export const en = {
   confirmDeleteBranchesBody:
     "This permanently deletes these branches from GitHub. This cannot be undone.",
   confirmDeleteBranchesAction: "Delete {count}",
+  confirmDeleteWarning: "This is permanent. Type the confirmation word to continue.",
+  confirmDeleteConfirmWord: "DELETE",
   toastBranchDeleted: "Deleted {branch}",
 } as const;
 
